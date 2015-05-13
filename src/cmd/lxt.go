@@ -9,7 +9,10 @@ import (
 )
 
 func main() {
-	if err := commander.Execute(nil, lxt.LinkCommand); nil != err {
+	if err := commander.Execute(nil,
+		lxt.LinkCommand,
+		lxt.ExistsCommand,
+	); nil != err {
 		log.Fatal(err)
 	}
 }
