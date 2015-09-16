@@ -1,12 +1,9 @@
 package lxt
 
 import (
-	"bufio"
-	"bytes"
 	"errors"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -17,69 +14,17 @@ import (
 	"github.com/craigmj/commander"
 )
 
-func scanLxcConfig(filename string) (chan string, error) {
-	inf, err := os.Open(filename)
-	if nil != err {
-		return nil, err
-	}
-	in := bufio.NewScanner(inf)
-	C := make(chan string)
-	go func() {
-		defer inf.Close()
-		defer close(C)
-		for in.Scan() {
-			C <- in.Text()
-		}
-	}()
-	return C, nil
-}
-
 // addMountToLxc scans the lxc config for
 // lxc.mount =
 // It passes that through and a lxc.mount.entry as follows:
 // lxc.mount.entry = /home/craig/proj/fundza/fundza var/proj/fundza none bind,optional,create=dir 0 0
 // Once that's done, it continues, removing any existing mount for the named source
 func addMountToLxc(C chan string, src, dest string) chan string {
-	D := make(chan string)
-	go func() {
-		defer close(D)
-		mountLine := fmt.Sprintf("lxc.mount.entry = %s %s none bind,optional,create=dir 0 0",
-			src, dest)
-		foundMount := false
-		mountRegexp := regexp.MustCompile(`^\s*lxc\.mount\s*=`)
-		duplicateRegexp := regexp.MustCompile(`^\s*lxc\.mount\.entry\s*=\s*` + src)
-		for l := range C {
-			if duplicateRegexp.MatchString(l) {
-				if !foundMount {
-					D <- mountLine
-					foundMount = true
-				}
-			} else if mountRegexp.MatchString(l) {
-				D <- l
-				if !foundMount {
-					D <- mountLine
-					foundMount = true
-				}
-			} else {
-				D <- l
-			}
-		}
-		if !foundMount {
-			D <- mountLine
-		}
-	}()
-	return D
-}
-
-func writeLxcConfig(filename string, C chan string) error {
-	var b bytes.Buffer
-	for l := range C {
-		fmt.Fprintln(&b, l)
-	}
-	if err := ioutil.WriteFile(filename, b.Bytes(), 0644); nil != err {
-		return err
-	}
-	return nil
+	mountLine := fmt.Sprintf("lxc.mount.entry = %s %s none bind,optional,create=dir 0 0",
+		src, dest)
+	mountRegexp := regexp.MustCompile(`^\s*lxc\.mount\s*=`)
+	duplicateRegexp := regexp.MustCompile(`^\s*lxc\.mount\.entry\s*=\s*` + src)
+	return addLineToLxc(C, mountRegexp, duplicateRegexp, mountLine)
 }
 
 func LinkDirIntoContainer(n, src, dest string) error {

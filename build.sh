@@ -13,7 +13,7 @@ if [ ! -d bin ]; then
 	mkdir bin
 fi
 go build -o bin/lxt -a src/cmd/lxt.go
-if [ ! -e `which lxt` ]; then 
+if [ ! `which lxt` ]; then 
 	sudo ln -s `pwd`/bin/lxt /usr/bin/lxt
 fi
 
