@@ -10,11 +10,16 @@ import (
 
 func main() {
 	if err := commander.Execute(nil,
-		lxt.LinkCommand,
+		lxt.LnCommand,
 		lxt.ExistsCommand,
 		lxt.AutoStartCommand,
+		lxt.GetIPCommand,
 		lxt.FixIPCommand,
 		lxt.CopyCommand,
+		lxt.PortForwardCommand,
+		lxt.ShellCommand,
+		lxt.CPathCommand,
+		lxt.TeeCommand,
 	); nil != err {
 		log.Fatal(err)
 	}

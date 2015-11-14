@@ -8,8 +8,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"gopkg.in/lxc/go-lxc.v2"
-
 	"github.com/craigmj/commander"
 )
 
@@ -33,13 +31,11 @@ func ContainerizePath(p string) (string, error) {
 	}
 	name, path := p[0:i], p[i+1:]
 
-	cont, err := lxc.NewContainer(name, lxc.DefaultConfigPath())
+	cont, err := GetDefinedContainer(name)
 	if nil != err {
 		return "", err
 	}
-	if !cont.Defined() {
-		return "", fmt.Errorf("Container '%s' does not exist", name)
-	}
+
 	if !filepath.IsAbs(path) {
 		path = filepath.Join("/home/ubuntu/", path)
 	}

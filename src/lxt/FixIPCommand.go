@@ -11,6 +11,7 @@ import (
 // given ip in the string, or to the container's current
 // IP if the container is running.
 func FixIP(containerName string, ip string) error {
+	return errors.New("Sorry, FixIP isn't working yet!")
 	return nil
 }
 

@@ -9,7 +9,8 @@ import (
 	"regexp"
 	"time"
 
-	"gopkg.in/lxc/go-lxc.v2"
+	// "github.com/golang/glog"
+	// "gopkg.in/lxc/go-lxc.v2"
 
 	"github.com/craigmj/commander"
 )
@@ -42,12 +43,9 @@ func LinkDirIntoContainer(n, src, dest string) error {
 		return errors.New("Your src path is not a directory")
 	}
 
-	cont, err := lxc.NewContainer(n, lxc.DefaultConfigPath())
+	cont, err := GetDefinedContainer(n)
 	if nil != err {
 		return err
-	}
-	if !cont.Defined() {
-		return errors.New("No container named " + n + " is defined")
 	}
 
 	isRunning := false
@@ -81,13 +79,15 @@ func LinkDirIntoContainer(n, src, dest string) error {
 	return nil
 }
 
-func LinkCommand() *commander.Command {
-	fs := flag.NewFlagSet("link", flag.ExitOnError)
+func LnCommand() *commander.Command {
+	fs := flag.NewFlagSet("ln", flag.ExitOnError)
 	n := fs.String("n", "", "Name of the container")
 	src := fs.String("src", "", "Source directory to map into the container")
 	dest := fs.String("dest", "", "Destination directory inside the container")
 
-	return commander.NewCommand("link", "Link a host directory into a container",
+	return commander.NewCommand(
+		"ln",
+		"Link a host directory into a container",
 		fs,
 		func(args []string) error {
 			if "" == *n {

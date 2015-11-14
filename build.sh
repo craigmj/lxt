@@ -4,6 +4,7 @@ export GOPATH=`pwd`
 for p in \
 	"gopkg.in/lxc/go-lxc.v2" \
 	"github.com/craigmj/commander" \
+	"github.com/golang/glog" \
 	; do
 	if [ ! -d src/$p ]; then
 		go get $p
