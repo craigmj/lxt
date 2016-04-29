@@ -3,6 +3,7 @@ package lxt
 import (
 	"errors"
 	"flag"
+	"io"
 	"os"
 
 	"github.com/craigmj/commander"
@@ -11,18 +12,32 @@ import (
 
 func Shell(n, script string) error {
 	c, err := GetDefinedContainer(n)
-
-	in, err := os.Open(script)
 	if nil != err {
-		return errors.New("Failed to open " +
-			script + " : " + err.Error())
+		return err
 	}
-	defer in.Close()
+
+	var sinFd uintptr
+	if "-" == script {
+		r, w, err := os.Pipe()
+		if nil != err {
+			return errors.New("Creating a pipe for stdin failed: " + err.Error())
+		}
+		go io.Copy(w, os.Stdin)
+		sinFd = r.Fd()
+	} else {
+		in, err := os.Open(script)
+		if nil != err {
+			return errors.New("Failed to open " +
+				script + " : " + err.Error())
+		}
+		defer in.Close()
+		sinFd = in.Fd()
+	}
 
 	options := lxc.AttachOptions{
 		UID:      os.Geteuid(),
 		GID:      os.Getegid(),
-		StdinFd:  in.Fd(),
+		StdinFd:  sinFd,
 		StdoutFd: os.Stdout.Fd(),
 		StderrFd: os.Stderr.Fd(),
 	}

@@ -1,7 +1,7 @@
 # lxt
 Simple tool for doing basic linux container tasks.
 
-This exists to facilitate working with containers via scripts.
+This exists to facilitate working with containers via scripts, and as an aide-memoire for doing some tricky container configuration easily.
 
 
 ## autostart
@@ -27,6 +27,8 @@ A container path is specified as CNAME:/path/in/container
 Copy copies files between containers, or container and hosts. Use the CNAME:/path/in/container format to specify containers.
 
 	sudo lxt cp /var/www/index.html test:/var/www/index.html
+
+Note: you can also do this with `lxc file push` or `lxc file pull`
 
 ## exists
 
@@ -65,6 +67,12 @@ The IPtables configuration set by portforward uses the current ipv4 address of t
 Shell runs one or more shell scripts inside the container. It echos stdout and stderr to the hosts stdout and stderr. Shell is much easier than copying shell files into the container, then using lxc-execute...
 
 	sudo lxt shell -n CNAME first.sh second.sh
+
+Note: you can do this with:
+
+	cat first.sh | sudo lxc-execute -n CNAME /bin/bash
+
+BUT lxc-execute will STOP the container after execution, whereas shell keeps the container running.
 
 ## tee
 

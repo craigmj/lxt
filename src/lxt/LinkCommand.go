@@ -90,15 +90,29 @@ func LnCommand() *commander.Command {
 		"Link a host directory into a container",
 		fs,
 		func(args []string) error {
+			var err error
 			if "" == *n {
 				return errors.New("You must name the container into which you want to link a directory (-n param)")
 			}
-			if "" == *src {
-				return errors.New("You must specify the source directory to link into the container (-src)")
+			srcdir := *src
+			if "" == srcdir {
+				if 2 == len(args) {
+					srcdir = args[0]
+				} else {
+					srcdir, err = os.Getwd()
+					if nil != err {
+						return errors.New("Cannot get cwd to use as source dir: " + err.Error())
+					}
+				}
 			}
-			if "" == *dest {
-				return errors.New("You must specify the destination directory inside the container (-dest)")
+			destdir := *dest
+			if "" == destdir {
+				if 0 < len(args) {
+					destdir = args[len(args)-1]
+				} else {
+					return errors.New("You must specify the destination directory inside the container (-dest)")
+				}
 			}
-			return LinkDirIntoContainer(*n, *src, *dest)
+			return LinkDirIntoContainer(*n, srcdir, destdir)
 		})
 }
