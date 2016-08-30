@@ -15,6 +15,7 @@ func main() {
 		lxt.AutoStartCommand,
 		lxt.GetIPCommand,
 		lxt.FixIPCommand,
+		lxt.HostCommand,
 		lxt.CopyCommand,
 		lxt.PortForwardCommand,
 		lxt.ShellCommand,
