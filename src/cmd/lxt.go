@@ -10,17 +10,23 @@ import (
 
 func main() {
 	if err := commander.Execute(nil,
-		lxt.LnCommand,
-		lxt.ExistsCommand,
+		lxt.AnsibleFacts,
 		lxt.AutoStartCommand,
-		lxt.GetIPCommand,
-		lxt.FixIPCommand,
-		lxt.HostCommand,
 		lxt.CopyCommand,
+		lxt.CPathCommand,
+		lxt.ExistsCommand,
+		lxt.ExposePortCommand,
+		lxt.FixIPCommand,
+		lxt.GetIPCommand,
+		lxt.HostCommand,
+		lxt.LnCommand,
 		lxt.PortForwardCommand,
 		lxt.ShellCommand,
-		lxt.CPathCommand,
+		lxt.SSHKeyCommand,
+		lxt.SSHKeyScanCommand,
+		lxt.SudoerCommand,
 		lxt.TeeCommand,
+		lxt.WriteAnsibleFact,
 	); nil != err {
 		log.Fatal(err)
 	}
