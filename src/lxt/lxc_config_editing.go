@@ -9,8 +9,28 @@ import (
 	"os"
 	"regexp"
 
-	"gopkg.in/lxc/go-lxc.v2"
+	"github.com/lxc/go-lxc"
 )
+
+func LxtConfigFile(name string) (string, error) {
+	cont, err := lxc.NewContainer(name, lxc.DefaultConfigPath())
+	if nil != err {
+		return ``, err
+	}
+	if !cont.Defined() {
+		return ``, errors.New("No container named " + name + " is defined")
+	}
+	return cont.ConfigFileName(), nil
+}
+
+func PrintLxtConfigFile(name string) error {
+	fn, err := LxtConfigFile(name)
+	if nil!=err {
+		return err
+	}
+	fmt.Println(fn)
+	return nil
+}
 
 func scanLxcConfig(filename string) (chan string, error) {
 	inf, err := os.Open(filename)

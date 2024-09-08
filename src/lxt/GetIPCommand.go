@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"gopkg.in/lxc/go-lxc.v2"
+	"github.com/lxc/go-lxc"
 
 	"github.com/craigmj/commander"
 )
@@ -40,11 +40,15 @@ func GetIPCommand() *commander.Command {
 		"Gets the current IP of the named container",
 		fs,
 		func(args []string) error {
-			ip, err := GetIP(*n)
-			if nil != err {
-				return err
-			}
-			fmt.Println(ip)
-			return nil
+			return PrintIP(*n)
 		})
+}
+
+func PrintIP(name string) error {
+	ip, err := GetIP(name)
+	if nil != err {
+		return err
+	}
+	fmt.Println(ip)
+	return nil
 }

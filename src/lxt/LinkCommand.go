@@ -90,29 +90,34 @@ func LnCommand() *commander.Command {
 		"Link a host directory into a container",
 		fs,
 		func(args []string) error {
-			var err error
-			if "" == *n {
-				return errors.New("You must name the container into which you want to link a directory (-n param)")
-			}
-			srcdir := *src
-			if "" == srcdir {
-				if 2 == len(args) {
-					srcdir = args[0]
-				} else {
-					srcdir, err = os.Getwd()
-					if nil != err {
-						return errors.New("Cannot get cwd to use as source dir: " + err.Error())
-					}
-				}
-			}
-			destdir := *dest
-			if "" == destdir {
-				if 0 < len(args) {
-					destdir = args[len(args)-1]
-				} else {
-					return errors.New("You must specify the destination directory inside the container (-dest)")
-				}
-			}
-			return LinkDirIntoContainer(*n, srcdir, destdir)
+			return LinkCommand(*n, *src, *dest, args)
 		})
+}
+
+func LinkCommand(containerName string, srcName string, destName string, args[] string) error {
+	var err error
+	if "" == containerName {
+		return errors.New("You must name the container into which you want to link a directory (-n param)")
+	}
+	srcdir := srcName
+	if "" == srcdir {
+		if 2 == len(args) {
+			srcdir = args[0]
+		} else {
+			srcdir, err = os.Getwd()
+			if nil != err {
+				return errors.New("Cannot get cwd to use as source dir: " + err.Error())
+			}
+		}
+	}
+	destdir := destName
+	if "" == destdir {
+		if 0 < len(args) {
+			destdir = args[len(args)-1]
+		} else {
+			return errors.New("You must specify the destination directory inside the container (-dest)")
+		}
+	}
+	return LinkDirIntoContainer(containerName, srcdir, destdir)
+
 }

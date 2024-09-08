@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/craigmj/commander"
-	"gopkg.in/lxc/go-lxc.v2"
+	"github.com/lxc/go-lxc"
 )
 
 func Shell(n, script string) error {

@@ -3,7 +3,7 @@ package lxt
 import (
 	"errors"
 
-	"gopkg.in/lxc/go-lxc.v2"
+	"github.com/lxc/go-lxc"
 )
 
 func GetDefinedContainer(n string) (*lxc.Container, error) {

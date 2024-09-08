@@ -14,6 +14,7 @@ func SetContainerAutoStart(n string, autostart bool) error {
 	if !autostart {
 		autoN = 0
 	}
+	fmt.Println(`SetContainerAutoStart(`, n, `, `, autostart, `)`)
 	find := regexp.MustCompile(`^\s*lxc\.start\.auto\s*=`)
 	return EditLxcAddLine(n, find, find, fmt.Sprintf("lxc.start.auto = %d", autoN))
 }

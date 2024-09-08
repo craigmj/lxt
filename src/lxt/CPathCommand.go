@@ -21,3 +21,14 @@ func CPathCommand() *commander.Command {
 			return nil
 		})
 }
+
+func CPath(paths []string) error {
+	for _, a := range paths {
+		l, err := ContainerizePath(a)
+		if nil != err {
+			return err
+		}
+		fmt.Println(l)
+	}
+	return nil
+}

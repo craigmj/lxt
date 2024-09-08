@@ -5,7 +5,7 @@ import (
 	"flag"
 	"os"
 
-	"gopkg.in/lxc/go-lxc.v2"
+	"github.com/lxc/go-lxc"
 
 	"github.com/craigmj/commander"
 )
@@ -31,15 +31,19 @@ func ExistsCommand() *commander.Command {
 		"exists", "Check whether a container exists - return 0 (exists) or 1 (not) to bash",
 		fs,
 		func([]string) error {
-			exists, err := ExistsContainer(*name)
-			if nil != err {
-				return err
-			}
-			if exists {
-				os.Exit(0)
-				return nil
-			}
-			os.Exit(1)
-			return nil
+			return ExistsCommandExit(*name)
 		})
+}
+
+func ExistsCommandExit(name string) error {
+	exists, err := ExistsContainer(name)
+	if nil != err {
+		return err
+	}
+	if exists {
+		os.Exit(0)
+		return nil
+	}
+	os.Exit(1)
+	return nil
 }

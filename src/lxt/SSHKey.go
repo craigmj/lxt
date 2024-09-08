@@ -31,11 +31,15 @@ func SSHKeyCommand() *commander.Command {
 		"Get the public sshkey for the container",
 		fs,
 		func([]string) error {
-			sshKey, err := GetSSHKey(*n)
-			if nil != err {
-				return err
-			}
-			fmt.Print(sshKey)
-			return nil
+			return PrintSSHKey(*n)
 		})
+}
+
+func PrintSSHKey(name string) error {
+	sshKey, err := GetSSHKey(name)
+	if nil != err {
+		return err
+	}
+	fmt.Print(sshKey)
+	return nil
 }

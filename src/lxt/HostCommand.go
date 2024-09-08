@@ -9,7 +9,7 @@ import (
 
 	"github.com/craigmj/commander"
 
-	"gopkg.in/lxc/go-lxc.v2"
+	"github.com/lxc/go-lxc"
 )
 
 var _ = fmt.Printf
@@ -46,7 +46,7 @@ func bashScript(c *lxc.Container, workingDirectory string, script string) error 
 	return nil
 }
 
-func installIntoContainer(n string, hostDir, containerDir string, script string) error {
+func InstallIntoContainer(n string, hostDir, containerDir string, script string) error {
 	c, err := lxc.NewContainer(n, lxc.DefaultConfigPath())
 	if nil != err {
 		return err
@@ -139,6 +139,6 @@ func HostCommand() *commander.Command {
 		"Install script into container",
 		fs,
 		func([]string) error {
-			return installIntoContainer(*cname, *dir, *dest, *script)
+			return InstallIntoContainer(*cname, *dir, *dest, *script)
 		})
 }
