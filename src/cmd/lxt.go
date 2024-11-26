@@ -81,6 +81,9 @@ Options:
 	--script=<script>  Script to execute in container (default: install.sh).
 	--user=<user>  Username (default: ` + whoami.Username + `).
 
+Description
+== a description of lxt to come here ==
+
 `	
 	opts, err := docopt.ParseDoc(usage)
 	doError(err)

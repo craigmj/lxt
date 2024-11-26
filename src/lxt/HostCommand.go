@@ -23,7 +23,7 @@ func bashScript(c *lxc.Container, workingDirectory string, script string) error 
 	}
 	go func() {
 		fmt.Fprintln(sout, `su - ubuntu`)
-		fmt.Fprintln(sout, script) // /opt/bookworks/install.sh`)
+		fmt.Fprintln(sout, script)
 		sout.Close()
 	}()
 	done, err := c.RunCommand([]string{
